@@ -3,12 +3,13 @@ import requests,time,argparse
 # Arguments/ --flags
 parser = argparse.ArgumentParser(description='Process some integers.')
 
-parser.add_argument('-w',dest="website", help='an integer for the accumulator')
-parser.add_argument('-s',dest="silent",action="store_true", help='an integer for the accumulator')
-parser.add_argument('-l',dest="list", help='an integer for the accumulator')
+parser.add_argument('-w','--website',dest="website", help='an integer for the accumulator')
+parser.add_argument('-s','--silent',dest="silent",action="store_true", help='an integer for the accumulator')
+parser.add_argument('-l','--wordlist',dest="list", help='an integer for the accumulator')
+parser.add_argument('-v','--version',dest="version",action="store_true",help='an integer for the accumulator')
 
 args = parser.parse_args()
-
+version = "0.1"
 print('''
  ____  _  _  ____  ____  __  __ _  ____  ____  ____ 
 / ___)/ )( \\(  _ \\(  __)(  )(  ( \\(    \\(  __)(  _ \
@@ -18,6 +19,9 @@ print('''
 =====================================================
     *** SubFinder is still under development ***
 ''')
+if args.version:
+    print(f"\033[1;37m[!] SubFinder is on version {version}\033[0;37m")
+    time.sleep(2)
 if args.website == None:
     print("\033[0;31m[WARNING] Can not proceed without a website being given [WARNING]\033[1;37m")
     exit()
