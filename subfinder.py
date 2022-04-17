@@ -3,10 +3,10 @@ import requests,time,argparse
 # Arguments/ --flags
 parser = argparse.ArgumentParser(description='Process some integers.')
 
-parser.add_argument('-w','--website',dest="website", help='an integer for the accumulator')
-parser.add_argument('-s','--silent',dest="silent",action="store_true", help='an integer for the accumulator')
-parser.add_argument('-l','--wordlist',dest="list", help='an integer for the accumulator')
-parser.add_argument('-v','--version',dest="version",action="store_true",help='an integer for the accumulator')
+parser.add_argument('-w','--website',dest="website", help='choose a website to target')
+parser.add_argument('-s','--silent',dest="silent",action="store_true", help='Enable silent mode')
+parser.add_argument('-l','--wordlist',dest="list", help='Choose a wordlist to use')
+parser.add_argument('-v','--version',dest="version",action="store_true",help='Find out what version you are running')
 
 args = parser.parse_args()
 version = "0.1"
