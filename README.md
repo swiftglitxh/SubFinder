@@ -1,7 +1,8 @@
+![sub](https://user-images.githubusercontent.com/72777943/194553599-f5117435-6475-46d7-a859-984ba3abf3b1.png)
+
+
 ## 📓 SubFinder {v 0.1}
 SubFinder is a dictionary attack tool to find websites subdomains
-
-![ezgif com-gif-maker](https://user-images.githubusercontent.com/72777943/194532460-2ab9dbc7-7f04-47e5-8bfc-a5ebd49c3b99.gif)
 
 ## ⌨️ Commands
 ```
