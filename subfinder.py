@@ -1,78 +1,114 @@
-import requests,time,argparse
+import requests
+import time
+import argparse
+import concurrent.futures
+import threading
+import subprocess
 
-# Arguments/ --flags
-parser = argparse.ArgumentParser(description='Process some integers.')
-
-parser.add_argument('-w','--website',dest="website", help='choose a website to target')
-parser.add_argument('-s','--silent',dest="silent",action="store_true", help='Enable silent mode')
-parser.add_argument('-l','--wordlist',dest="list", help='Choose a wordlist to use')
-parser.add_argument('-v','--version',dest="version",action="store_true",help='Find out what version you are running')
-
-args = parser.parse_args()
-version = "0.1"
-print('''
+subprocess.call(['clear'])
+red = '\033[1;31m'
+blue = '\033[1;32m'
+yellow = '\033[1;33m'
+reset = '\033[0;27m'
+version = "0.3"
+print(f'''
  ____  _  _  ____  ____  __  __ _  ____  ____  ____ 
-/ ___)/ )( \\(  _ \\(  __)(  )(  ( \\(    \\(  __)(  _ \
+/ ___)/ )( \(  _ \(  __)(  )(  ( \(    \(  __)(  _ \
 
-\\___ \\) \\/ ( ) _ ( ) _)  )( /    / ) D ( ) _)  )   /
-(____/\\____/(____/(__)  (__)\\_)__)(____/(____)(__\\_) \033[1;33m{Version: 0.1}\033[0;37m
+\\___ \) \\/ ( ) _ ( ) _)  )( /    / ) D ( ) _)  )   /
+(____/\\____/(____/(__)  (__)\\_)__)(____/(____)(__\\_) \033[1;33mVersion: {version}\033[0;37m
 =====================================================
-    *** SubFinder is still under development ***
+    {blue}*** SubFinder is still under development ***{reset}
 ''')
-if args.version:
-    print(f"\033[1;37m[!] SubFinder is on version {version}\033[0;37m")
-    time.sleep(2)
-if args.website == None:
-    print("\033[0;31m[WARNING] Can not proceed without a website being given [WARNING]\033[1;37m")
-    exit()
-# the domain to scan for subdomains
-domain = args.website
-if "https://www." in domain:
-    domain = domain[12:]
-elif "http://www." in domain:
-    domain = domain[11:]
-found = 0
-undiscovered = 0
-# read all subdomains
-wordlist = args.list
-file = open(wordlist,mode="r",encoding="ISO-8859-1")
-# read all content
-content = file.read()
 
-# split by new lines
-subdomains = content.splitlines()
+# Constants
+HTTP_PREFIXES = ["https://www.", "http://www."]
 
-# a list of discovered subdomains
-discovered_subdomains = []
-print('\033[1;36m[=] Discovering Subdomains\n')
-start = time.time()
-for subdomain in subdomains:
-    # construct the url
-    url = f"https://{subdomain}.{domain}"
+def discover_subdomain(url, verbose=False):
     try:
-        # if this raises an ERROR, that means the subdomain does not exist
-        requests.get(url)
+        response = requests.get(url)
+        response.raise_for_status()  # Raise HTTP error if response status code indicates an error
+        print(f"{blue}[+] Discovered Subdomain: {reset}{url} ")
+        return url
 
-    except requests.ConnectionError:
-        # if the subdomain does not exist, just pass, print nothing
-        print("\033[1;33m[x] Undiscovered Subdomain:\033[0;37m", url)
-        undiscovered += 1
-    except requests.exceptions.ConnectionError as e:
-        print(f'''
-\033[0;31m X
- │
- ╰> \033[0;37m{e}
-            ''')
-        pass
-    else:
-        print(f"\033[1;32m[+] Discovered   Subdomain: \033[0;37m{url}" )
-        found += 1
-        # append the discovered subdomain to our list
-        discovered_subdomains.append(url)
-finished = time.time()
-done = int(finished - start)
-print("\n\033[1;37m[!] Scan Complete\033[0;37m")
-print(f"\033[1;37m[+] Scan Took: \033[0;37m{done} seconds to finish")
-print(f"\033[1;37m[=] Discovered:\033[0;37m {found}")
-print(f"\033[1;37m[=] Undiscovered:\033[0;37m {undiscovered}")
-print("\n *** Please Note Some Results May Not Be 100% ***")
+    except requests.exceptions.RequestException:
+        if verbose:
+            print(f"{red}[x] Undiscovered Subdomain:{reset} {url}")
+        return None
+
+def scan_subdomains(subdomains, domain, verbose, num_threads):
+    found = 0
+    undiscovered = 0
+
+    def scanning_message():
+        print()
+        while not done_scanning[0]:
+            print("Scanning...", end="\r")
+            time.sleep(1)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=num_threads) as executor:
+        future_to_url = {executor.submit(discover_subdomain, f"{prefix}{subdomain}.{domain}", verbose): subdomain for subdomain in subdomains for prefix in HTTP_PREFIXES}
+        
+        done_scanning = [False]
+        scanning_thread = threading.Thread(target=scanning_message)
+        scanning_thread.start()
+
+        for future in concurrent.futures.as_completed(future_to_url):
+            subdomain = future_to_url[future]
+            result = future.result()
+            if result:
+                found += 1
+            else:
+                undiscovered += 1
+
+        done_scanning[0] = True
+        scanning_thread.join()
+
+    return found, undiscovered
+
+def discover_subdomains(domain, wordlist_path, verbose=False, num_threads=10):
+    found = 0
+    undiscovered = 0
+
+    # Read wordlist
+    with open(wordlist_path, mode="r", encoding="ISO-8859-1") as file:
+        subdomains = file.read().splitlines()
+
+    domain = domain.replace("https://", "").replace("http://", "")  # Remove http:// or https:// prefixes
+
+    print(f"\n{yellow}[=] Discovering Subdomains for {domain}{reset}\n")
+
+    start_time = time.time()
+    
+    found, undiscovered = scan_subdomains(subdomains, domain, verbose, num_threads)
+
+    end_time = time.time()
+    elapsed_time = int(end_time - start_time)
+
+    print("\n[!] Scan Complete")
+    print(f"[+] Scan Took: {elapsed_time} seconds to finish")
+    print(f"[=] Discovered: {found}")
+    if verbose:
+        print(f"[=] Undiscovered: {undiscovered}")
+    print("*** Please Note Some Results May Not Be 100% ***")
+
+    return found, undiscovered
+
+def main():
+    parser = argparse.ArgumentParser(description='Discover subdomains for a website using a wordlist.')
+    parser.add_argument('-w', '--website', dest="website", help='Choose a website to target', required=True)
+    parser.add_argument('-l', '--wordlist', dest="wordlist", help='Choose a wordlist to use', required=True)
+    parser.add_argument('-v', '--verbose', dest="verbose", action="store_true", help='Show both discovered and undiscovered subdomains')
+    parser.add_argument('-t', '--threads', dest="threads", type=int, default=10, help='Number of threads to use for scanning (default: 10)')
+
+    args = parser.parse_args()
+
+    if not args.website or not args.wordlist:
+        print("\033[0;31m[WARNING] Both website and wordlist are required [WARNING]\033[1;37m")
+        parser.print_help()
+        return
+
+    discover_subdomains(args.website, args.wordlist, args.verbose, args.threads)
+
+if __name__ == '__main__':
+    main()
