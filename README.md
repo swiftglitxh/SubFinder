@@ -1,5 +1,5 @@
-![sub](https://user-images.githubusercontent.com/72777943/194553599-f5117435-6475-46d7-a859-984ba3abf3b1.png)
 
+![New Project](https://github.com/swiftglitxh/SubFinder/assets/72777943/c73b9581-d3fd-4ead-9130-77d0db8ae3a9)
 
 ## 📓 SubFinder {v 0.3}
 SubFinder is a dictionary attack tool to find websites subdomains
