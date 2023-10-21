@@ -30,5 +30,32 @@ python3 subfinder.py -w https://www.google.com -l /usr/share/wordlists/rockyou.t
 - Version argument has been added to allow you to check which version of SubFinder you have
 - SubFinder is now `x5` faster then previous versions 
 
+##Example Code
+```
+ ____  _  _  ____  ____  __  __ _  ____  ____  ____ 
+/ ___)/ )( \(  _ \(  __)(  )(  ( \(    \(  __)(  _ \
+\___ \) \/ ( ) _ ( ) _)  )( /    / ) D ( ) _)  )   /
+(____/\____/(____/(__)  (__)\_)__)(____/(____)(__\_) Version: 0.3
+=====================================================
+    *** SubFinder is still under development ***
+
+
+[=] Discovering Subdomains for google.com
+
+
+[+] Discovered Subdomain: http://www.images.google.com 
+[+] Discovered Subdomain: http://www.news.google.com 
+[+] Discovered Subdomain: https://www.news.google.com 
+[+] Discovered Subdomain: http://www.photos.google.com 
+[+] Discovered Subdomain: https://www.photos.google.com 
+[+] Discovered Subdomain: https://www.docs.google.com 
+[+] Discovered Subdomain: http://www.docs.google.com 
+...
+[!] Scan Complete
+[+] Scan Took: 3 seconds to finish
+[=] Discovered: 31
+
+*** Please Note Some Results May Not Be 100% ***
+```
 ## Language:
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
