@@ -23,8 +23,10 @@ python3 subfinder.py -w https://www.google.com -l /usr/share/wordlists/rockyou.t
 ##  🔨 Updates
 **Version 0.1** 
 - SubFinder now lets users choose their own file to use when preforming their attack
+
 **Version 0.2**
 - Bug Fixes 
+
 **Version 0.3**
 - Threads have been added into Subfinder
 - Version argument has been added to allow you to check which version of SubFinder you have
