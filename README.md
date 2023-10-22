@@ -2,10 +2,10 @@
 ![New Project](https://github.com/swiftglitxh/SubFinder/assets/72777943/c73b9581-d3fd-4ead-9130-77d0db8ae3a9)
 
 ## 📓 SubFinder {v 0.3}
-SubFinder is a dictionary attack tool to find websites subdomains
+SubFinder is a versatile and efficient subdirectory discovery tool designed for web security and penetration testing. This Python-based tool empowers ethical hackers, security professionals, and researchers to uncover hidden subdirectories on websites, allowing for a more comprehensive analysis of a target domain.
 
 ## ⌨️ Commands
-```
+```python3
 Usage:
   subfinder[flags]
 
@@ -17,7 +17,7 @@ Flags:
   -t, --threads            Number of threads to use for scanning (default: 10)
 ```
 ## 🕵🏼‍♂️ How to run SubFinder?
-```
+```python3
 python3 subfinder.py -w https://www.google.com -l /usr/share/wordlists/rockyou.txt -v --threads 30
 ```
 ##  🔨 Updates
@@ -31,7 +31,7 @@ python3 subfinder.py -w https://www.google.com -l /usr/share/wordlists/rockyou.t
 - SubFinder is now `x5` faster then previous versions 
 
 ##Example Code
-```
+```python3
  ____  _  _  ____  ____  __  __ _  ____  ____  ____ 
 / ___)/ )( \(  _ \(  __)(  )(  ( \(    \(  __)(  _ \
 \___ \) \/ ( ) _ ( ) _)  )( /    / ) D ( ) _)  )   /
@@ -57,5 +57,7 @@ python3 subfinder.py -w https://www.google.com -l /usr/share/wordlists/rockyou.t
 
 *** Please Note Some Results May Not Be 100% ***
 ```
-## Language:
-![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+<br/>
+
+[![SubFinder Version](https://img.shields.io/badge/Language-Python-yellow?style=for-the-badge&logo=github)](https://github.com/swiftglitxh/SubFinder/releases/tag/v0.3) &nbsp; [![SubFinder Version](https://img.shields.io/badge/version-0.3-blue?style=for-the-badge&logo=github)](https://github.com/swiftglitxh/SubFinder/releases/tag/v0.3)
+
